@@ -1,1 +1,4 @@
 tmpfile
+
+# Redis database file
+*.rdb

@@ -1,6 +1,10 @@
+"""
+Read from a 10 MB base64 file by every 9 KB and write to a redis stream "ejfat".
+"""
+
 import redis
 
-def write_file_to_redis_stream(file_path, stream_name, chunk_size=8192):
+def write_file_to_redis_stream(file_path, stream_name, chunk_size=9000):
     """
     Args:
       - chunk_size: chunck size in bytes.
@@ -31,7 +35,8 @@ def write_file_to_redis_stream(file_path, stream_name, chunk_size=8192):
             entry_id += 1
 
 if __name__ == "__main__":
-    file_path = 'test_file'
+    file_path = 'tmpfile'
+    # Generate a 10 MB base64 testfile with: openssl rand -base64 -out tmpfile 10000000
     stream_name = 'ejfat'
 
     write_file_to_redis_stream(file_path, stream_name)
