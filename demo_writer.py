@@ -25,7 +25,7 @@ def write_file_to_redis_stream(file_path, stream_name, chunk_size=8192):
             data = {'data': chunk.decode('utf-8')}  # Adjust decoding based on your file format
 
             # Write the data to the Redis Stream
-            y678vf.xadd(stream_name, {'entry_id': entry_id_bytes, **data})
+            r.xadd(stream_name, {'entry_id': entry_id_bytes, **data})
 
             # Increment the entry ID for the next iteration
             entry_id += 1
