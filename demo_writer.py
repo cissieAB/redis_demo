@@ -1,10 +1,10 @@
 """
-Read from a 10 MB base64 file by every 9 KB and write to a redis stream "ejfat".
+Read from a 10 MB base64 file by several chunks and write to a redis stream "ejfat".
 """
 
 import redis
 
-def write_file_to_redis_stream(file_path, stream_name, chunk_size=9000):
+def write_file_to_redis_stream(file_path, stream_name, chunk_size=1024*1024):
     """
     Args:
       - chunk_size: chunck size in bytes.
@@ -22,14 +22,14 @@ def write_file_to_redis_stream(file_path, stream_name, chunk_size=9000):
             if not chunk:
                 break
 
-            # Convert the entry ID to bytes
-            entry_id_bytes = str(entry_id).encode('utf-8')
+            # Convert the entry ID to str
+            entry_id_str = str(entry_id).encode('utf-8')
 
             # Create a dictionary representing the data to be stored in the stream
             data = {'data': chunk.decode('utf-8')}  # Adjust decoding based on your file format
 
             # Write the data to the Redis Stream
-            r.xadd(stream_name, {'entry_id': entry_id_bytes, **data})
+            r.xadd(stream_name, {'entry_id': entry_id_str, **data})
 
             # Increment the entry ID for the next iteration
             entry_id += 1
